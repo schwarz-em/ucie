@@ -17,6 +17,7 @@ class PatternReaderWithLfsrHarness(afeParams: AfeParams) extends Module {
     val interfaceIo = new PatternReaderIO(afeParams.mbLanes)
     val mbRxLaneIo =
       Input(new MainbandLanes(afeParams.mbLanes, afeParams.mbSerializerRatio))
+    val mbRxValid = Input(Bool())
     val rxLfsrCtrl = new Bundle {
       val increment = Output(Bool())
       val resetLfsr = Output(Bool())
@@ -36,6 +37,7 @@ class PatternReaderWithLfsrHarness(afeParams: AfeParams) extends Module {
   patternReader.io.interfaceIo.resp.ready := io.interfaceIo.resp.ready
 
   patternReader.io.mbRxLaneIo := io.mbRxLaneIo
+  patternReader.io.mbRxValid := io.mbRxValid
 
   patternReader.io.rxLfsrCtrl.pattern := rxLfsr.io.lfsrOutput
   rxLfsr.io.increment := VecInit(
@@ -353,6 +355,7 @@ class PatternReaderTest extends AnyFunSpec with ChiselSim {
     dut.io.interfaceIo.req.valid.poke(false.B)
     dut.io.interfaceIo.done.poke(false.B)
     dut.io.interfaceIo.resp.ready.poke(false.B)
+    dut.io.mbRxValid.poke(true.B)
   }
 
   // Issue a request and consume the accepting cycle (returns with the DUT detecting,

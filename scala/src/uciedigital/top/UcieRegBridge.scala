@@ -305,6 +305,9 @@ class UcieRegBridge(
   io.protoCtrl.requestRetrain := regsToLink.retrainPending
   io.protoCtrl.requestLinkReset := false.B
   io.protoCtrl.requestDisable := false.B
+  // No DVSEC field drives link bring-up yet; defaults to zero per the field's
+  // own contract (see ProtocolStateController's FDI_BRINGUP-window gating).
+  io.protoCtrl.requestActive := false.B
 
   // ==============================================================================================
   // Vendor block
