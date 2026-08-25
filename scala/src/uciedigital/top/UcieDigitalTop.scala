@@ -145,8 +145,11 @@ class UcieDigitalTop(
       r.module.io.linkErrorIrq.foreach(dontTouch(_))
     }
 
-    // TODO: PHY macro control/status is owned by the analog register file, not the UCIe block.
-    logicalPhy.io.analog.status := DontCare
+    // TODO: PHY macro control/status is owned by the analog register file, not the UCIe
+    // block, and the current analog macro doesn't expose a real PLL-lock/clock-stable
+    // signal. Tie both fields high to avoid stalling
+    logicalPhy.io.analog.status.pllLock := true.B
+    logicalPhy.io.analog.status.clocksUngatedAndStable := true.B
     dontTouch(logicalPhy.io.analog.ctrl)
   }
 }
